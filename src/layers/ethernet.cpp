@@ -1,26 +1,21 @@
 #include "netforge/layers/ethernet.hpp"
 
-#include "netforge/buffer/utils.hpp"
 #include <cstring>
 #include <iomanip>
 
 namespace netforge {
 
-void ethernet_header_t::produce(uint8_t*& ptr) {
-    memcpy(ptr, dst_mac, 6);
-    ptr += 6;
-    memcpy(ptr, src_mac, 6);
-    ptr += 6;
-    utils::produce<uint16_t>(ptr, ethertype);
+void ethernet_header_t::produce(buffer& buf) {
+    buf.produce_bytes(dst_mac, 6);
+    buf.produce_bytes(src_mac, 6);
+    buf.produce<uint16_t>(ethertype);
 }
 
-ethernet_header_t ethernet_header_t::consume(uint8_t*& ptr) {
+ethernet_header_t ethernet_header_t::consume(buffer& buf) {
     ethernet_header_t hdr;
-    memcpy(hdr.dst_mac, ptr, 6);
-    ptr += 6;
-    memcpy(hdr.src_mac, ptr, 6);
-    ptr += 6;
-    hdr.ethertype = utils::consume<uint16_t>(ptr);
+    std::memcpy(hdr.dst_mac, buf.consume_bytes(6), 6);
+    std::memcpy(hdr.src_mac, buf.consume_bytes(6), 6);
+    hdr.ethertype = buf.consume<uint16_t>();
     return hdr;
 }
 

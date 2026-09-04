@@ -1,7 +1,8 @@
 #include "netforge/layers/ipv4.hpp"
 
-#include "netforge/buffer/utils.hpp"
 #include <arpa/inet.h>
+
+#include "netforge/buffer/utils.hpp"
 
 namespace netforge {
 
@@ -21,52 +22,52 @@ ipv4_header_t::ipv4_header_t() {
     destination_ip = 0;
 }
 
-void ipv4_header_t::produce(uint8_t*& ptr) {
-    utils::produce<uint8_t>(ptr, (version << 4) | (ihl & 0x0F));
-    utils::produce<uint8_t>(ptr, (dscp << 2) | (ecn & 0x03));
-    utils::produce<uint16_t>(ptr, total_length);
-    utils::produce<uint16_t>(ptr, identification);
-    utils::produce<uint16_t>(ptr, (flags << 13) | (fragment_offset & 0x1FFF));
-    utils::produce<uint8_t>(ptr, ttl);
-    utils::produce<uint8_t>(ptr, protocol);
-    utils::produce<uint16_t>(ptr, header_checksum);
-    utils::produce<uint32_t>(ptr, source_ip);
-    utils::produce<uint32_t>(ptr, destination_ip);
+void ipv4_header_t::produce(buffer& buf) {
+    buf.produce<uint8_t>((version << 4) | (ihl & 0x0F));
+    buf.produce<uint8_t>((dscp << 2) | (ecn & 0x03));
+    buf.produce<uint16_t>(total_length);
+    buf.produce<uint16_t>(identification);
+    buf.produce<uint16_t>((flags << 13) | (fragment_offset & 0x1FFF));
+    buf.produce<uint8_t>(ttl);
+    buf.produce<uint8_t>(protocol);
+    buf.produce<uint16_t>(header_checksum);
+    buf.produce<uint32_t>(source_ip);
+    buf.produce<uint32_t>(destination_ip);
 }
 
-ipv4_header_t ipv4_header_t::consume(uint8_t*& ptr) {
+ipv4_header_t ipv4_header_t::consume(buffer& buf) {
     ipv4_header_t hdr;
 
-    uint8_t version_ihl = utils::consume<uint8_t>(ptr);
+    uint8_t version_ihl = buf.consume<uint8_t>();
     hdr.version = version_ihl >> 4;
     hdr.ihl = version_ihl & 0x0F;
 
-    uint8_t tos = utils::consume<uint8_t>(ptr);
+    uint8_t tos = buf.consume<uint8_t>();
     hdr.dscp = tos >> 2;
     hdr.ecn = tos & 0x03;
 
-    hdr.total_length = utils::consume<uint16_t>(ptr);
-    hdr.identification = utils::consume<uint16_t>(ptr);
+    hdr.total_length = buf.consume<uint16_t>();
+    hdr.identification = buf.consume<uint16_t>();
 
-    uint16_t flags_frag = utils::consume<uint16_t>(ptr);
+    uint16_t flags_frag = buf.consume<uint16_t>();
     hdr.flags = flags_frag >> 13;
     hdr.fragment_offset = flags_frag & 0x1FFF;
 
-    hdr.ttl = utils::consume<uint8_t>(ptr);
-    hdr.protocol = utils::consume<uint8_t>(ptr);
-    hdr.header_checksum = utils::consume<uint16_t>(ptr);
-    hdr.source_ip = utils::consume<uint32_t>(ptr);
-    hdr.destination_ip = utils::consume<uint32_t>(ptr);
+    hdr.ttl = buf.consume<uint8_t>();
+    hdr.protocol = buf.consume<uint8_t>();
+    hdr.header_checksum = buf.consume<uint16_t>();
+    hdr.source_ip = buf.consume<uint32_t>();
+    hdr.destination_ip = buf.consume<uint32_t>();
 
     return hdr;
 }
 
 void ipv4_header_t::compute_checksum() {
     header_checksum = 0;
-    uint8_t buf[20];
-    uint8_t* ptr = buf;
-    produce(ptr);
-    header_checksum = utils::checksum(buf, 20, 0);
+    uint8_t bytes[20];
+    buffer buf(bytes, sizeof(bytes));
+    produce(buf);
+    header_checksum = utils::checksum(bytes, 20, 0);
 }
 
 std::ostream& operator<<(std::ostream& out, ipv4_header_t& h) {

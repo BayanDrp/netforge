@@ -3,6 +3,8 @@
 #include <cstdint>
 #include <ostream>
 
+#include "netforge/buffer/buffer.hpp"
+
 namespace netforge {
 
 struct tcp_header_t {
@@ -30,8 +32,8 @@ struct tcp_header_t {
 
     tcp_header_t();
 
-    void produce(uint8_t*& ptr);
-    static tcp_header_t consume(uint8_t*& ptr);
+    void produce(buffer& buf);
+    static tcp_header_t consume(buffer& buf);
     void compute_checksum(uint32_t src_ip, uint32_t dst_ip,
                           const uint8_t* data, int data_len);
 

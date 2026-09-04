@@ -3,6 +3,8 @@
 #include <cstdint>
 #include <ostream>
 
+#include "netforge/buffer/buffer.hpp"
+
 namespace netforge {
 
 struct ethernet_header_t {
@@ -12,8 +14,8 @@ struct ethernet_header_t {
 
     static constexpr size_t size() { return 14; }
 
-    void produce(uint8_t*& ptr);
-    static ethernet_header_t consume(uint8_t*& ptr);
+    void produce(buffer& buf);
+    static ethernet_header_t consume(buffer& buf);
 
     friend std::ostream& operator<<(std::ostream& out, const ethernet_header_t& h);
 };

@@ -5,10 +5,12 @@
 #include <string>
 #include <vector>
 
+#include "netforge/buffer/buffer.hpp"
+
 namespace netforge {
 
 std::vector<uint8_t> encode_name(const std::string& name);
-std::string decode_name(uint8_t*& ptr, uint8_t* msg_start);
+std::string decode_name(buffer& buf, uint8_t* msg_start);
 
 struct dns_header_t {
     uint16_t id;
@@ -31,8 +33,8 @@ struct dns_header_t {
 
     dns_header_t();
 
-    void produce(uint8_t*& ptr);
-    static dns_header_t consume(uint8_t*& ptr);
+    void produce(buffer& buf);
+    static dns_header_t consume(buffer& buf);
 
     friend std::ostream& operator<<(std::ostream& out, const dns_header_t& h);
 };
@@ -45,8 +47,8 @@ struct dns_message_t {
         uint16_t qtype{1};
         uint16_t qclass{1};
 
-        void produce(uint8_t*& ptr);
-        static question_t consume(uint8_t*& ptr, uint8_t* msg_start);
+        void produce(buffer& buf);
+        static question_t consume(buffer& buf, uint8_t* msg_start);
     };
 
     struct answer_t {
@@ -56,8 +58,8 @@ struct dns_message_t {
         uint32_t ttl;
         std::vector<uint8_t> rdata;
 
-        void produce(uint8_t*& ptr);
-        static answer_t consume(uint8_t*& ptr, uint8_t* msg_start);
+        void produce(buffer& buf);
+        static answer_t consume(buffer& buf, uint8_t* msg_start);
     };
 
     std::vector<question_t> questions;
@@ -65,8 +67,8 @@ struct dns_message_t {
     std::vector<answer_t> authorities;
     std::vector<answer_t> additional;
 
-    void produce(uint8_t*& ptr);
-    static dns_message_t consume(uint8_t*& ptr);
+    void produce(buffer& buf);
+    static dns_message_t consume(buffer& buf);
 
     friend std::ostream& operator<<(std::ostream& out, const dns_message_t& m);
 };

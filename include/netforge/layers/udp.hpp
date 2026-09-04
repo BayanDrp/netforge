@@ -3,6 +3,8 @@
 #include <cstdint>
 #include <ostream>
 
+#include "netforge/buffer/buffer.hpp"
+
 namespace netforge {
 
 struct udp_header_t {
@@ -17,8 +19,8 @@ struct udp_header_t {
 
     udp_header_t();
 
-    void produce(uint8_t*& ptr) const;
-    static udp_header_t consume(uint8_t*& ptr);
+    void produce(buffer& buf) const;
+    static udp_header_t consume(buffer& buf);
 
     friend std::ostream& operator<<(std::ostream& out, const udp_header_t& h);
 };

@@ -1,8 +1,10 @@
 #include "netforge/layers/tcp.hpp"
 
-#include "netforge/buffer/utils.hpp"
 #include <arpa/inet.h>
 #include <cstring>
+#include <vector>
+
+#include "netforge/buffer/utils.hpp"
 
 namespace netforge {
 
@@ -24,28 +26,28 @@ tcp_header_t::tcp_header_t() {
     urgent_pointer = 0;
 }
 
-void tcp_header_t::produce(uint8_t*& ptr) {
-    utils::produce<port_addr_t>(ptr, src_port);
-    utils::produce<port_addr_t>(ptr, dst_port);
-    utils::produce<uint32_t>(ptr, seq_no);
-    utils::produce<uint32_t>(ptr, ack_no);
-    utils::produce<uint16_t>(ptr,
+void tcp_header_t::produce(buffer& buf) {
+    buf.produce<port_addr_t>(src_port);
+    buf.produce<port_addr_t>(dst_port);
+    buf.produce<uint32_t>(seq_no);
+    buf.produce<uint32_t>(ack_no);
+    buf.produce<uint16_t>(
         (header_length << 12) | (NOP << 6) | (URG << 5) | (ACK << 4) |
         (PSH << 3) | (RST << 2) | (SYN << 1) | FIN);
-    utils::produce<uint16_t>(ptr, window_size);
-    utils::produce<uint16_t>(ptr, checksum);
-    utils::produce<uint16_t>(ptr, urgent_pointer);
+    buf.produce<uint16_t>(window_size);
+    buf.produce<uint16_t>(checksum);
+    buf.produce<uint16_t>(urgent_pointer);
 }
 
-tcp_header_t tcp_header_t::consume(uint8_t*& ptr) {
+tcp_header_t tcp_header_t::consume(buffer& buf) {
     tcp_header_t h;
 
-    h.src_port = utils::consume<port_addr_t>(ptr);
-    h.dst_port = utils::consume<port_addr_t>(ptr);
-    h.seq_no = utils::consume<uint32_t>(ptr);
-    h.ack_no = utils::consume<uint32_t>(ptr);
+    h.src_port = buf.consume<port_addr_t>();
+    h.dst_port = buf.consume<port_addr_t>();
+    h.seq_no = buf.consume<uint32_t>();
+    h.ack_no = buf.consume<uint32_t>();
 
-    uint16_t hl_flags = utils::consume<uint16_t>(ptr);
+    uint16_t hl_flags = buf.consume<uint16_t>();
     h.header_length = hl_flags >> 12;
     h.NOP = (hl_flags >> 6) & 0x3F;
     h.URG = (hl_flags >> 5) & 0x1;
@@ -55,9 +57,9 @@ tcp_header_t tcp_header_t::consume(uint8_t*& ptr) {
     h.SYN = (hl_flags >> 1) & 0x1;
     h.FIN = hl_flags & 0x1;
 
-    h.window_size = utils::consume<uint16_t>(ptr);
-    h.checksum = utils::consume<uint16_t>(ptr);
-    h.urgent_pointer = utils::consume<uint16_t>(ptr);
+    h.window_size = buf.consume<uint16_t>();
+    h.checksum = buf.consume<uint16_t>();
+    h.urgent_pointer = buf.consume<uint16_t>();
 
     return h;
 }
@@ -76,14 +78,14 @@ void tcp_header_t::compute_checksum(uint32_t src_ip, uint32_t dst_ip,
 
     uint32_t sum = utils::sum_every_16bits(pseudo, 12);
 
-    uint8_t buf[20 + data_len];
-    uint8_t* ptr = buf;
+    std::vector<uint8_t> bytes(size() + data_len);
+    buffer buf(bytes.data(), bytes.size());
     checksum = 0;
-    produce(ptr);
+    produce(buf);
     if (data && data_len > 0)
-        memcpy(buf + size(), data, data_len);
+        memcpy(bytes.data() + size(), data, data_len);
 
-    checksum = utils::checksum(buf, size() + data_len, sum);
+    checksum = utils::checksum(bytes.data(), bytes.size(), sum);
 }
 
 std::ostream& operator<<(std::ostream& out, const tcp_header_t& h) {

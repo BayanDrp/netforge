@@ -3,6 +3,8 @@
 #include <cstdint>
 #include <ostream>
 
+#include "netforge/buffer/buffer.hpp"
+
 namespace netforge {
 
 using ip_addr_t = uint32_t;
@@ -30,8 +32,8 @@ struct ipv4_header_t {
 
     ipv4_header_t();
 
-    void produce(uint8_t*& ptr);
-    static ipv4_header_t consume(uint8_t*& ptr);
+    void produce(buffer& buf);
+    static ipv4_header_t consume(buffer& buf);
     void compute_checksum();
 
     friend std::ostream& operator<<(std::ostream& out, ipv4_header_t& h);
