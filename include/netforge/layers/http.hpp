@@ -1,4 +1,5 @@
-#pragma once
+#ifndef NETFORGE_LAYERS_HTTP_HPP
+#define NETFORGE_LAYERS_HTTP_HPP
 
 #include <cstdint>
 #include <map>
@@ -35,3 +36,5 @@ struct http_response_t {
 };
 
 }  // namespace netforge
+
+#endif  // NETFORGE_LAYERS_HTTP_HPP

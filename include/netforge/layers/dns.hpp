@@ -1,4 +1,5 @@
-#pragma once
+#ifndef NETFORGE_LAYERS_DNS_HPP
+#define NETFORGE_LAYERS_DNS_HPP
 
 #include <cstdint>
 #include <ostream>
@@ -74,3 +75,5 @@ struct dns_message_t {
 };
 
 }  // namespace netforge
+
+#endif  // NETFORGE_LAYERS_DNS_HPP

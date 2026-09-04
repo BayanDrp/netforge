@@ -1,4 +1,5 @@
-#pragma once
+#ifndef NETFORGE_LAYERS_IPV4_HPP
+#define NETFORGE_LAYERS_IPV4_HPP
 
 #include <cstdint>
 #include <ostream>
@@ -40,3 +41,5 @@ struct ipv4_header_t {
 };
 
 }  // namespace netforge
+
+#endif  // NETFORGE_LAYERS_IPV4_HPP

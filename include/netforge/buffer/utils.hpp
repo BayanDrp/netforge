@@ -1,4 +1,5 @@
-#pragma once
+#ifndef NETFORGE_BUFFER_UTILS_HPP
+#define NETFORGE_BUFFER_UTILS_HPP
 
 #include <cstdint>
 #include <cstring>
@@ -36,3 +37,5 @@ inline uint16_t checksum(uint8_t* addr, int count, int start_sum) {
 
 };  // namespace utils
 };  // namespace netforge
+
+#endif  // NETFORGE_BUFFER_UTILS_HPP

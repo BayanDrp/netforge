@@ -1,4 +1,5 @@
-#pragma once
+#ifndef NETFORGE_LAYERS_UDP_HPP
+#define NETFORGE_LAYERS_UDP_HPP
 
 #include <cstdint>
 #include <ostream>
@@ -26,3 +27,5 @@ struct udp_header_t {
 };
 
 }  // namespace netforge
+
+#endif  // NETFORGE_LAYERS_UDP_HPP

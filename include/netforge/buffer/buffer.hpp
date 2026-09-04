@@ -1,4 +1,5 @@
-#pragma once
+#ifndef NETFORGE_BUFFER_BUFFER_HPP
+#define NETFORGE_BUFFER_BUFFER_HPP
 
 #include <cstddef>
 #include <cstdint>
@@ -12,24 +13,17 @@ namespace netforge {
 class buffer {
 public:
     buffer() = default;
-    buffer(uint8_t* data, std::size_t size) : data_(data), size_(size) {}
+    buffer(uint8_t* data, std::size_t size);
 
-    uint8_t* data() const noexcept { return data_; }
-    std::size_t size() const noexcept { return size_; }
-    std::size_t position() const noexcept { return pos_; }
-    std::size_t remaining() const noexcept { return size_ - pos_; }
-    bool full() const noexcept { return pos_ >= size_; }
-    bool can_read(std::size_t n) const noexcept { return remaining() >= n; }
+    uint8_t* data() const noexcept;
+    std::size_t size() const noexcept;
+    std::size_t position() const noexcept;
+    std::size_t remaining() const noexcept;
+    bool full() const noexcept;
+    bool can_read(std::size_t n) const noexcept;
 
-    void seek(std::size_t pos) {
-        if (pos > size_) throw std::out_of_range("buffer::seek");
-        pos_ = pos;
-    }
-
-    void skip(std::size_t n) {
-        if (!can_read(n)) throw std::out_of_range("buffer::skip");
-        pos_ += n;
-    }
+    void seek(std::size_t pos);
+    void skip(std::size_t n);
 
     template <typename T>
     T consume() {
@@ -57,18 +51,8 @@ public:
         return true;
     }
 
-    uint8_t* consume_bytes(std::size_t n) {
-        if (!can_read(n)) throw std::out_of_range("buffer::consume_bytes");
-        uint8_t* ptr = data_ + pos_;
-        pos_ += n;
-        return ptr;
-    }
-
-    void produce_bytes(const void* src, std::size_t n) {
-        if (!can_read(n)) throw std::out_of_range("buffer::produce_bytes");
-        std::memcpy(data_ + pos_, src, n);
-        pos_ += n;
-    }
+    uint8_t* consume_bytes(std::size_t n);
+    void produce_bytes(const void* src, std::size_t n);
 
 private:
     uint8_t* data_ = nullptr;
@@ -77,3 +61,5 @@ private:
 };
 
 }  // namespace netforge
+
+#endif  // NETFORGE_BUFFER_BUFFER_HPP

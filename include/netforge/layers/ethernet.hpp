@@ -1,4 +1,5 @@
-#pragma once
+#ifndef NETFORGE_LAYERS_ETHERNET_HPP
+#define NETFORGE_LAYERS_ETHERNET_HPP
 
 #include <cstdint>
 #include <ostream>
@@ -21,3 +22,5 @@ struct ethernet_header_t {
 };
 
 }  // namespace netforge
+
+#endif  // NETFORGE_LAYERS_ETHERNET_HPP

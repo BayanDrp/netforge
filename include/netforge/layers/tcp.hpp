@@ -1,4 +1,5 @@
-#pragma once
+#ifndef NETFORGE_LAYERS_TCP_HPP
+#define NETFORGE_LAYERS_TCP_HPP
 
 #include <cstdint>
 #include <ostream>
@@ -41,3 +42,5 @@ struct tcp_header_t {
 };
 
 }  // namespace netforge
+
+#endif  // NETFORGE_LAYERS_TCP_HPP
