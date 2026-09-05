@@ -14,7 +14,9 @@ add_library(netforge STATIC
     src/layers/tcp.cpp
     src/layers/dns.cpp
     src/layers/http.cpp
+    src/layers/icmp.cpp
     src/io/raw_socket.cpp
+    src/packet/mac.cpp
 )
 
 target_include_directories(netforge PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
