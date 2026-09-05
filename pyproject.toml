@@ -1,13 +1,19 @@
 [build-system]
-requires = ["setuptools>=61"]
+requires = ["setuptools>=61", "pybind11>=2.10"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "netforge"
 version = "0.1.0"
 description = "C++17 packet crafting/sniffing library with Python bindings"
+readme = "README.md"
+license = "MIT"
 requires-python = ">=3.8"
+dependencies = []
+
+[project.urls]
+Repository = "https://github.com/BayanDrp/netforge"
 
 [tool.setuptools]
-package-dir = {"" = "python"}
+package-dir = { "" = "python" }
 packages = ["netforge"]

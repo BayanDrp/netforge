@@ -130,14 +130,24 @@ udp = netforge.UdpHeader()
 udp.src_port = 53000
 udp.dst_port = 53
 
+dns = netforge.DnsMessage()
+dns.add_question("google.com")
+
 pkt = netforge.Packet()
 pkt.add(netforge.EthernetHeader())
 pkt.add(ip)
 pkt.add(udp)
-pkt.add(netforge.make_dns_query("google.com"))
+pkt.add(dns)
 
-frame = pkt.data()          # 46-byte DNS query frame
-ipv4, udp, dns = pkt.read_ipv4(), pkt.read_udp(), pkt.read_dns()
+pkt.read_ethernet()
+ip = pkt.read_ipv4()
+udp = pkt.read_udp()
+dns = pkt.read_dns()
+print(dns.questions[0].qname)   # google.com (parsed back)
+
+frame = pkt.data()              # 70-byte DNS query frame
+
+# netforge.make_dns_query("google.com") instead returns a full ready-to-send frame
 ```
 
 ## Examples

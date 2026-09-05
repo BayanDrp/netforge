@@ -66,7 +66,10 @@ find_package(Python COMPONENTS Interpreter Development QUIET)
 find_package(pybind11 CONFIG QUIET)
 if(Python_FOUND AND pybind11_FOUND)
     pybind11_add_module(netforge_bindings bindings/module.cpp)
-    set_target_properties(netforge_bindings PROPERTIES OUTPUT_NAME _netforge)
+    set_target_properties(netforge_bindings PROPERTIES
+        OUTPUT_NAME _netforge
+        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/python/netforge
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/python/netforge)
     target_link_libraries(netforge_bindings PRIVATE netforge ${PCAP_LIBRARIES})
     target_include_directories(netforge_bindings PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
     target_compile_options(netforge_bindings PRIVATE -Wall -Wextra)
