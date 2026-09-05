@@ -6,6 +6,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PCAP REQUIRED libpcap)
+
 add_library(netforge STATIC
     src/buffer/buffer.cpp
     src/layers/ethernet.cpp
@@ -15,11 +18,15 @@ add_library(netforge STATIC
     src/layers/dns.cpp
     src/layers/http.cpp
     src/layers/icmp.cpp
+    src/layers/ipv6.cpp
     src/io/raw_socket.cpp
+    src/io/sniffer.cpp
     src/packet/mac.cpp
 )
 
 target_include_directories(netforge PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(netforge PRIVATE ${PCAP_INCLUDE_DIRS})
+target_link_libraries(netforge PRIVATE ${PCAP_LIBRARIES})
 target_compile_options(netforge PRIVATE -Wall -Wextra -Werror)
 
 enable_testing()

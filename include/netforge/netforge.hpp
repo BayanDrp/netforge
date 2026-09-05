@@ -8,6 +8,7 @@
 #include "netforge/layers/http.hpp"
 #include "netforge/layers/icmp.hpp"
 #include "netforge/layers/ipv4.hpp"
+#include "netforge/layers/ipv6.hpp"
 #include "netforge/layers/tcp.hpp"
 #include "netforge/layers/udp.hpp"
 #include "netforge/layers/icmp.hpp"
