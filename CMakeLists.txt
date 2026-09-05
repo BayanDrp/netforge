@@ -22,6 +22,8 @@ add_library(netforge STATIC
     src/io/raw_socket.cpp
     src/io/sniffer.cpp
     src/packet/mac.cpp
+    src/parser/checksum.cpp
+    src/parser/dissect.cpp
 )
 
 target_include_directories(netforge PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -45,6 +47,7 @@ netforge_add_executable(example_craft examples/cpp/craft.cpp)
 netforge_add_executable(example_dns_query examples/cpp/dns_query.cpp)
 netforge_add_executable(example_sniff examples/cpp/sniff.cpp)
 netforge_add_executable(example_tcp_handshake examples/cpp/tcp_handshake.cpp)
+netforge_add_executable(bench_parse benchmarks/bench_parse.cpp)
 
 netforge_add_executable(test_checksum tests/cpp/test_checksum.cpp)
 netforge_add_executable(test_dns tests/cpp/test_dns.cpp)

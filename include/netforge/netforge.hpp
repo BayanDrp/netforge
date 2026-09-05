@@ -11,6 +11,7 @@
 #include "netforge/layers/ipv6.hpp"
 #include "netforge/layers/tcp.hpp"
 #include "netforge/layers/udp.hpp"
-#include "netforge/layers/icmp.hpp"
+#include "netforge/parser/checksum.hpp"
+#include "netforge/parser/dissect.hpp"
 
 #endif // NETFORGE_NETFORGE_HPP
