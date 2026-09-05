@@ -38,8 +38,8 @@ int main(int argc, char* argv[]) {
     ipv4_header_t ip;
     ip.protocol = 17;
     ip.ttl = 64;
-    ip.source_ip = 0x0100007F;
-    ip.destination_ip = 0x0100007F;
+    ip.source_ip = 0x7F000001;
+    ip.destination_ip = 0x7F000001;
     ip.total_length = static_cast<uint16_t>(20 + udp_len);
     ip.compute_checksum();
 
